@@ -284,20 +284,19 @@ void InitUnitTables() {
     if (err <= VSFileSystem::Ok) {
         UnitJSONFactory::ParseJSON(jsonFile);
 
+        jsonFile.Close();
     } else {
         // Try units.csv
         VSFileSystem::VSFile csvFile;
         VSFileSystem::VSError err = csvFile.OpenReadOnly("units.csv", VSFileSystem::UnitFile);
         if (err <= VSFileSystem::Ok) {
             UnitCSVFactory::ParseCSV(csvFile, true);
+            csvFile.Close();
         } else {
             std::cerr << "Unable to open units file. Aborting.\n";
             abort();
         }
-        csvFile.Close();
     }
-
-    jsonFile.Close();
 
     // TODO: where did this code snippet come from???
     /*if (f.GetFilename() == "units_description.csv" ||
@@ -310,10 +309,8 @@ void InitUnitTables() {
     err = newJsonFile.OpenReadOnly("ships.json", VSFileSystem::UnitFile);
     if (err <= VSFileSystem::Ok) {
         UnitOptimizeFactory::ParseJSON(newJsonFile);
-
+        newJsonFile.Close();
     }
-
-    newJsonFile.Close();
 }
 
 void CleanupUnitTables() {
